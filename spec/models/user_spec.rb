@@ -23,6 +23,12 @@ RSpec.describe User, type: :model do
       expect(@user.errors.full_messages).to include("Email can't be blank")
     end
 
+    it "emailに@が含まれない場合登録できないこと" do
+      @user.email = "abcdef"
+      @user.valid?
+      expect(@user.errors.full_messages).to include("Email is invalid")
+    end
+
     it "重複したemailが存在する場合登録できないこと" do
       @user.save
       another_user = FactoryBot.build(:user, email: @user.email)
@@ -34,12 +40,6 @@ RSpec.describe User, type: :model do
       @user.password = nil
       @user.valid?
       expect(@user.errors.full_messages).to include("Password can't be blank")
-    end
-
-    it "passwordが6文字かつ半角英数それぞれ1文字以上含んでいれば登録できること" do
-      @user.password = "abc123"
-      @user.password_confirmation = "abc123"
-      expect(@user).to be_valid
     end
 
     it "passwordが5文字以下であれば英数それぞれ1文字以上含んでいても登録できないこと" do
@@ -63,16 +63,18 @@ RSpec.describe User, type: :model do
       expect(@user.errors.full_messages).to include("Password Include both letters and numbers")
     end
 
+    it "passwordが6文字でも全角文字が含まれる場合登録できないこと" do
+      @user.password = "11111あ"
+      @user.password_confirmation = "11111あ"
+      @user.valid?
+      expect(@user.errors.full_messages).to include("Password Include both letters and numbers")
+    end
+
     it "passwordとpassword_confirmationが不一致では登録できないこと" do
       @user.password = "abc123"
       @user.password_confirmation = "abc1234"
       @user.valid?
       expect(@user.errors.full_messages).to include("Password confirmation doesn't match Password")
-    end
-
-    it "first_nameが大文字のみで構成されていれば登録できること" do
-      @user.first_name = "あいうえお"
-      expect(@user).to be_valid
     end
 
     it "first_nameが空では登録できないこと" do
@@ -87,17 +89,6 @@ RSpec.describe User, type: :model do
       expect(@user.errors.full_messages).to include("First name Full-width characters")
     end
 
-    it "first_nameが小文字を含んでいる場合、登録できないこと" do
-      @user.first_name = "あいうeo"
-      @user.valid?
-      expect(@user.errors.full_messages).to include("First name Full-width characters")
-    end
-    
-    it "last_nameが大文字のみで構成されていれば登録できること" do
-      @user.last_name = "かきくけこ"
-      expect(@user).to be_valid
-    end
-
     it "last_nameが空では登録できないこと" do
       @user.last_name = nil
       @user.valid?
@@ -108,17 +99,6 @@ RSpec.describe User, type: :model do
       @user.last_name = "bbbbb"
       @user.valid?
       expect(@user.errors.full_messages).to include("Last name Full-width characters")
-    end
-
-    it "last_nameが小文字を含んでいる場合、登録できないこと" do
-      @user.last_name = "かきくkeko"
-      @user.valid?
-      expect(@user.errors.full_messages).to include("Last name Full-width characters")
-    end
-
-    it "first_name_kanaが大文字カタカナのみで構成されていれば登録できること" do
-      @user.first_name_kana = "サシスセソ"
-      expect(@user).to be_valid
     end
 
     it "first_name_kanaが空では登録できないこと" do
@@ -137,11 +117,6 @@ RSpec.describe User, type: :model do
       @user.first_name_kana = "サシスeo"
       @user.valid?
       expect(@user.errors.full_messages).to include("First name kana Full-width katakana characters")
-    end
-
-    it "last_name_kanaが大文字カタカナのみで構成されていれば登録できること" do
-      @user.last_name_kana = "タチツテト"
-      expect(@user).to be_valid
     end
 
     it "last_name_kanaが空では登録できないこと" do
