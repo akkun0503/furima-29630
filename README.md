@@ -15,11 +15,11 @@
 
 ### Association
 
-- has_many :products
+- has_many :items
 - has_many :purchases
 
 
-## products テーブル
+## items テーブル
 
 | Column                 | Type       | Options                        |
 | ---------------------- | ---------- | ------------------------------ |
@@ -49,7 +49,7 @@
 ### Association
 
 - belongs_to :user
-- belongs_to :product
+- belongs_to :item
 - has_one    :address
 
 
