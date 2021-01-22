@@ -30,7 +30,7 @@ class ItemsController < ApplicationController
     if @item.update(item_params)
       redirect_to item_path(@item.id)
     else
-      render :new
+      render :edit
     end
   end
 
@@ -44,7 +44,7 @@ class ItemsController < ApplicationController
   end
 
   def baria_item
-    if @item.user.id.to_i != current_user.id
+    if @item.user.id != current_user.id
       redirect_to item items_path(current_user)
     end
   end
