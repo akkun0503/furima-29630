@@ -45,7 +45,7 @@ class ItemsController < ApplicationController
 
   def baria_item
     if @item.user.id != current_user.id
-      redirect_to item items_path(current_user)
+      redirect_to root_path
     end
   end
 
