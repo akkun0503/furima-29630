@@ -1,5 +1,7 @@
 class PurchasesController < ApplicationController
+  before_action :authenticate_user!, only: :index
   before_action :find_item, only: [:index, :create]
+  before_action :baria_purchase, only: :index
 
   def index
     @purchase_item = PurchaseItem.new
@@ -22,5 +24,11 @@ class PurchasesController < ApplicationController
 
   def find_item
     @item = Item.find(params[:item_id])
+  end
+
+  def baria_purchase
+    if @item.user.id = current_user.id
+      redirect_to root_path
+    end
   end
 end
