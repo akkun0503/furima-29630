@@ -1,7 +1,7 @@
 class PurchasesController < ApplicationController
-  before_action :authenticate_user!, only: :index
+  before_action :authenticate_user!, only: [:index]
   before_action :find_item, only: [:index, :create]
-  before_action :baria_purchase, only: :index
+  before_action :baria_purchase, only: [:index]
 
   def index
     @purchase_item = PurchaseItem.new
@@ -27,7 +27,7 @@ class PurchasesController < ApplicationController
   end
 
   def baria_purchase
-    if @item.user.id = current_user.id
+    if @item.user_id == current_user.id
       redirect_to root_path
     end
   end
