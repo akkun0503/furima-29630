@@ -14,7 +14,7 @@ class PurchasesController < ApplicationController
       @purchase_item.save
       redirect_to root_path
     else
-      render :index
+      render 'index'
     end
   end
 
