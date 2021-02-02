@@ -8,8 +8,8 @@ class PurchaseItem
     validates :city
     validates :address
     validates :phone_number, numericality: { only_integer: true, message: "Input only number" }, length: { maximum: 11 }
+    validates :token
   end
-
 
   def save
     purchase = Purchase.create(user_id: user_id, item_id: item_id)
