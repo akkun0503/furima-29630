@@ -28,9 +28,7 @@ class PurchasesController < ApplicationController
   end
 
   def baria_purchase
-    if @item.user_id == current_user.id
-      redirect_to root_path
-    elsif @item.purchase.present?
+    if @item.user_id == current_user.id || @item.purchase.present?
       redirect_to root_path
     end
   end
