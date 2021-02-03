@@ -2,11 +2,18 @@ require 'rails_helper'
 
 RSpec.describe PurchaseItem, type: :model do
   before do
-    @purchase_item = FactoryBot.build(:purchase_item)
+    user = FactoryBot.create(:user)
+    item = FactoryBot.create(:item)
+      @purchase_item = FactoryBot.build(:purchase_item, user_id: user.id, item_id: item.id)
   end
 
   describe '商品購入者情報の保存' do
   it 'すべての値が正しく入力されていれば保存できること' do
+    expect(@purchase_item).to be_valid
+  end
+
+  it '建物名が入力されていなくてもその他の項目が正しく入力されていれば保存できること' do
+    @purchase_item.building = nil
     expect(@purchase_item).to be_valid
   end
 
@@ -44,6 +51,12 @@ RSpec.describe PurchaseItem, type: :model do
     @purchase_item.phone_number = nil
     @purchase_item.valid?
     expect(@purchase_item.errors.full_messages).to include("Phone number can't be blank")
+  end
+
+  it 'phone_numberが12桁以上だと保存できないこと' do
+    @purchase_item.phone_number = '090123456789'
+    @purchase_item.valid?
+    expect(@purchase_item.errors.full_messages).to include("Phone number is too long (maximum is 11 characters)")
   end
 
   it "phone_numberに英文字が混じっていると保存できないこと" do
@@ -86,6 +99,18 @@ RSpec.describe PurchaseItem, type: :model do
     @purchase_item.token = nil
     @purchase_item.valid?
     expect(@purchase_item.errors.full_messages).to include("Token can't be blank")
+  end
+
+  it 'user_idが空だと保存できないこと' do
+    @purchase_item.user_id = nil
+    @purchase_item.valid?
+    expect(@purchase_item.errors.full_messages).to include("User can't be blank")
+  end
+
+  it 'item_idが空だと保存できないこと' do
+    @purchase_item.item_id = nil
+    @purchase_item.valid?
+    expect(@purchase_item.errors.full_messages).to include("Item can't be blank")
   end
 
   end
